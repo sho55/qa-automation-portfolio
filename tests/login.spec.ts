@@ -56,3 +56,34 @@ test('正しい情報でログインできること', async ({ page }) => {
     await expect(page).toHaveURL('https://qa-auto-ec-site.vercel.app/mypage');
 
 })
+
+test('間違ったパスワードでログインが失敗すること', async ({ page }) => {
+    // 1.ログインページにアクセス
+    await page.goto('https://qa-auto-ec-site.vercel.app/login');
+
+    // 3秒待つ
+    await page.waitForTimeout(3000);
+
+    // 2. メールアドレスを入力
+    await page.getByPlaceholder('メールアドレス').fill('user@example.com');
+    // 3秒待つ
+    await page.waitForTimeout(3000);
+
+    // わざと間違ったパスワードを入力
+    await page.getByPlaceholder('パスワード').fill('hogehoge');
+    // 3秒待つ
+    await page.waitForTimeout(3000);
+
+    // 4. ログインボタンをクリック
+    await page.getByRole('button', { name: 'ログイン' }).click();
+    // 3秒待つ
+    await page.waitForTimeout(3000);
+
+    // スクリーンショットを撮る
+    await page.screenshot({ path: '1_error-message.png' });
+
+    // ディレクトリを指定してスクリーンショットを撮る
+    await page.screenshot({ path: 'evidence/2_error-message.png', fullPage: true });
+
+    await expect(page.getByTestId('error-message')).toContainText('メールアドレスまたはパスワードが違います');
+})
