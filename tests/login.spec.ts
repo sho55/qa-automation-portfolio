@@ -29,11 +29,15 @@ test('ログイン状態を保持するチェックができること', async ({
 
     await expect(page.getByLabel('ログイン状態を保持する')).toBeChecked();
 })
+test.describe('ログイン機能のテスト', () => {
+
+    // このグループ内のすべての test() が実行される「直前」に、必ずこれが実行される！
+    test.beforeEach(async ({ page }) => {
+        await page.goto('https://qa-auto-ec-site.vercel.app/login');
+    });
 
 test('正しい情報でログインできること', async ({ page }) => {
-    // 1.ログインページにアクセス
-    await page.goto('https://qa-auto-ec-site.vercel.app/login');
-
+    
     // 3秒待つ
     await page.waitForTimeout(3000);
 
@@ -58,8 +62,6 @@ test('正しい情報でログインできること', async ({ page }) => {
 })
 
 test('間違ったパスワードでログインが失敗すること', async ({ page }) => {
-    // 1.ログインページにアクセス
-    await page.goto('https://qa-auto-ec-site.vercel.app/login');
 
     // 3秒待つ
     await page.waitForTimeout(3000);
@@ -86,4 +88,6 @@ test('間違ったパスワードでログインが失敗すること', async ({
     await page.screenshot({ path: 'evidence/2_error-message.png', fullPage: true });
 
     await expect(page.getByTestId('error-message')).toContainText('メールアドレスまたはパスワードが違います');
+})
+
 })
